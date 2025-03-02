@@ -112,7 +112,8 @@ const changePassword = async (req, res) => {
         const userId = req.userInfo.userId;
 
         // extract old and new password
-        const {oldPassword, newPassword} = req.body;
+        const {currentPassword, newPassword} = req.body;
+        console.log(req.body);
 
         //find the current loged in user
         const user = await User.findById(userId);
@@ -126,7 +127,7 @@ const changePassword = async (req, res) => {
 
     //check if old password is correct
     
-    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+    const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
     if(!isPasswordMatch){
         return res.status(400).json({
             success: false,
@@ -134,7 +135,7 @@ const changePassword = async (req, res) => {
         });
 
     }
-    if(oldPassword === newPassword){
+    if(currentPassword === newPassword){
         return res.status(400).json({
             success: false,
             message: 'New password cannot be same as old password'
